@@ -1,14 +1,8 @@
-
 import time
 import datetime
 from collections import defaultdict
-import rlcompleter
 import readline
-import logging
-
-LOG_FILENAME = 'log.log'
-logging.basicConfig(filename=LOG_FILENAME,
-        level=logging.DEBUG)
+import rlcompleter
 
 total_work_time = 0.
 total_not_work_time = 0.
@@ -18,13 +12,10 @@ not_work_things = defaultdict(int)
 
 class Completer:
     def complete(self, text, state):
-        logging.info('completion called')
         if state == 0:
             self.matches = [s
                             for s in work_things.keys() + not_work_things.keys()
                             if s.startswith(text)]
-
-        logging.info('matches: %s (text %s - state %s)' % (self.matches, text, state))
 
         try:
             return self.matches[state]
@@ -33,7 +24,7 @@ class Completer:
 
 # add autocompletion
 readline.set_completer(Completer().complete)
-readline.parse_and_bind('tab: complete')
+readline.parse_and_bind('bind ^I rl_complete')
 
 def print_stats():
     print 'working: %s (%.2f%%)' % (datetime.timedelta(seconds=total_work_time), 100. * total_work_time / (total_work_time + total_not_work_time) )
